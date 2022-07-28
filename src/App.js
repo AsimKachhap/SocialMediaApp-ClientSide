@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {getPosts} from './actions/posts';
 import Posts from './components/Posts/Posts';
 import Form from './components/Form/Form.js'
@@ -8,7 +8,7 @@ import memories from './images/memories.png';
 import useStyles from './styles';
 
 function App() {
-
+  const [currentId, setCurrentId]= useState(null);
   const dispatch = useDispatch();
   const classes = useStyles();
   
