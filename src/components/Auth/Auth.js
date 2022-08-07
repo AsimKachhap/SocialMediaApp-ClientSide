@@ -7,8 +7,8 @@ import Input from './Input';
 
 const Auth = () => {
    const [showPassword, setShowPassword] = useState(false);
+   const [isSignUp, setIsSignUp] = useState(false);
    const classes = useStyles();
-   const isSignUp = false;
 
    const handleShowPassword = ()=> setShowPassword((prevShowPassword)=>!prevShowPassword);
 
@@ -20,6 +20,11 @@ const Auth = () => {
 
    }
 
+
+   const switchMode = ()=>{
+    setIsSignUp((prevIsSignUp)=>!prevIsSignUp);
+    handleShowPassword(false);
+   }
 
   return (
    <Container component="main" maxWidth="xs">
@@ -33,7 +38,7 @@ const Auth = () => {
                 {
                     isSignUp &&(
                         <>
-                            <Grid xs={6} md={12} >
+                            <Grid container spacing={2} >
                                 <Input name="firstName" label="First Name" handleChange={handleChange} autoFocus half />
                                 <Input name="lastName" label="Last Name" handleChange={handleChange}  half />
                             </Grid>
@@ -47,6 +52,13 @@ const Auth = () => {
             <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit} >
                 {isSignUp? "Sign Up" : "Sign In"}
             </Button>
+            <Grid container justify="flex-end">
+                <Grid item >
+                    <Button onClick={switchMode}>
+                        {isSignUp?"Already hane an Account? Sign In" : "Don't have an Account? Sign Up"}
+                    </Button>
+                </Grid>
+            </Grid>
         </form>
     </Paper>
    </Container>
