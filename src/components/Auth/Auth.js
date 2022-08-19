@@ -1,7 +1,9 @@
 import React, {useState} from 'react';
 import { Avatar, Button, Paper, Grid, Typography, Container, TextField } from '@material-ui/core';
+import { GoogleLogin } from '@react-oauth/google';
 import LockOutlinedIcon from '@material-ui/icons/LockOpenOutlined';
 
+import Icon from './icon';
 import useStyles from './styles';
 import Input from './Input';
 
@@ -24,6 +26,14 @@ const Auth = () => {
    const switchMode = ()=>{
     setIsSignUp((prevIsSignUp)=>!prevIsSignUp);
     handleShowPassword(false);
+   }
+
+   const googleSuccess = async (res)=>{
+    console.log(res);
+   }
+
+   const googleFailure = ()=>{
+    console.log('Google Sign In was unsuccessfull. try again later');
    }
 
   return (
@@ -49,10 +59,25 @@ const Auth = () => {
                 <Input name="password" label="Password" handleChange={handleChange} type={showPassword ? "text" : "password" } handleshowPassword={handleShowPassword}/>
                 {isSignUp && <Input name="confirmPassword" label="Repeat Password" handleChange={handleChange} type="password" />}
             </Grid>
+
+                
+                    <GoogleLogin
+                        onSuccess={credentialResponse => {
+                            console.log(credentialResponse);
+                        }}
+                        onError={() => {
+                            console.log('Login Failed');
+                        }}
+                    />;
+
+                    
+               
+            
+
             <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit} >
                 {isSignUp? "Sign Up" : "Sign In"}
             </Button>
-            <Grid container justify="flex-end">
+            <Grid container justifyContent="flex-end">
                 <Grid item >
                     <Button onClick={switchMode}>
                         {isSignUp?"Already hane an Account? Sign In" : "Don't have an Account? Sign Up"}
