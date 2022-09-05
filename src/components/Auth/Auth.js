@@ -2,34 +2,58 @@ import React, {useState} from 'react';
 import { Avatar, Button, Paper, Grid, Typography, Container, TextField } from '@material-ui/core';
 import { GoogleLogin } from '@react-oauth/google';
 import LockOutlinedIcon from '@material-ui/icons/LockOpenOutlined';
+import {useNavigate} from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import {signin, signup} from '../../actions/auth';
 
 import Icon from './icon';
 import useStyles from './styles';
 import Input from './Input';
 
+const initialState={firstName:'', lastName:'', email:'', password:'', confirmPassword:''}
+
 const Auth = () => {
    const [showPassword, setShowPassword] = useState(false);
    const [isSignUp, setIsSignUp] = useState(false);
+   const[formData, setFormData] = useState(initialState);
+   const dispatch = useDispatch(); 
+   const navigate = useNavigate();
+
    const classes = useStyles();
 
    const handleShowPassword = ()=> setShowPassword((prevShowPassword)=>!prevShowPassword);
 
-   const handleSubmit = ()=>{
+   const handleSubmit = (e)=>{
+    e.preventDefault();
 
+    if(isSignUp){
+        dispatch(signup(formData, navigate));
+    }
+    else{
+        dispatch(signin(formData, navigate));
+    }
+    console.log(formData);
    }
 
-   const handleChange = ()=>{
-
-   }
+   const handleChange = (e)=>{
+    setFormData({...formData, [e.target.name]:e.target.value});
+   };
 
 
    const switchMode = ()=>{
     setIsSignUp((prevIsSignUp)=>!prevIsSignUp);
-    handleShowPassword(false);
+    setShowPassword(false);
    }
 
    const googleSuccess = async (res)=>{
-    console.log(res);
+    const result = res?.profile.Obj;
+    const token =  res?.tokenID;
+    try {
+        dispatch({type:'AUTH', data:{result,token}});
+        navigate.pushState('/');
+    } catch (error) {
+        console.log(error);
+    }
    }
 
    const googleFailure = ()=>{
@@ -60,19 +84,10 @@ const Auth = () => {
                 {isSignUp && <Input name="confirmPassword" label="Repeat Password" handleChange={handleChange} type="password" />}
             </Grid>
 
-                
-                    <GoogleLogin
-                        onSuccess={credentialResponse => {
-                            console.log(credentialResponse);
-                        }}
-                        onError={() => {
-                            console.log('Login Failed');
-                        }}
-                    />;
-
-                    
-               
-            
+            <GoogleLogin
+                       onSuccess={(response)=>googleSuccess(response)}
+                       onError={()=>googleFailure} 
+            />;   
 
             <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit} >
                 {isSignUp? "Sign Up" : "Sign In"}

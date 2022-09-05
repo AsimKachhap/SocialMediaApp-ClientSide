@@ -10,7 +10,7 @@ import Navbar from './components/Navbar/Navbar';
 function App() {
   
   return (
-    <GoogleOAuthProvider clientID="45399943182-f7pgaghi6ulda2t7lh90gp68erv4ip3i.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId= "45399943182-f7pgaghi6ulda2t7lh90gp68erv4ip3i.apps.googleusercontent.com ">
     <BrowserRouter>
       <Container maxWidth="lg">
        <Navbar />
